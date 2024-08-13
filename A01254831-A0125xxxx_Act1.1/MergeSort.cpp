@@ -3,6 +3,12 @@
 
 using namespace std;
 
+// to run this program please first compile it using the following command:
+// g++ MergeSort.cpp -o MergeSort
+
+// then run it using the following command:
+// ./MergeSort < input.txt
+
 // This function merges two parts of the array.
 // We're merging the section from `left` to `mid` with the section from `mid + 1` to `right`.
 // The goal here is to combine them in a way that keeps everything in descending order.
@@ -12,28 +18,28 @@ void merge(vector<double> &arr, int left, int mid, int right)
     int n2 = right - mid;
 
     // Temporary arrays to hold the split parts
-    vector<double> L(n1);
-    vector<double> R(n2);
+    vector<double> LeftArray(n1);
+    vector<double> RightArray(n2);
 
     // Copy the data into the temp arrays
     for (int i = 0; i < n1; i++)
-        L[i] = arr[left + i];
+        LeftArray[i] = arr[left + i];
     for (int j = 0; j < n2; j++)
-        R[j] = arr[mid + 1 + j];
+        RightArray[j] = arr[mid + 1 + j];
 
     int i = 0, j = 0, k = left;
 
     // Merge the two arrays back into the main array in the correct order
     while (i < n1 && j < n2)
     {
-        if (L[i] >= R[j])
+        if (LeftArray[i] >= RightArray[j])
         {
-            arr[k] = L[i];
+            arr[k] = LeftArray[i];
             i++;
         }
         else
         {
-            arr[k] = R[j];
+            arr[k] = RightArray[j];
             j++;
         }
         k++;
@@ -42,7 +48,7 @@ void merge(vector<double> &arr, int left, int mid, int right)
     // If there are leftover elements in the left array, add them back in
     while (i < n1)
     {
-        arr[k] = L[i];
+        arr[k] = LeftArray[i];
         i++;
         k++;
     }
@@ -50,7 +56,7 @@ void merge(vector<double> &arr, int left, int mid, int right)
     // If there are leftover elements in the right array, add those too
     while (j < n2)
     {
-        arr[k] = R[j];
+        arr[k] = RightArray[j];
         j++;
         k++;
     }
