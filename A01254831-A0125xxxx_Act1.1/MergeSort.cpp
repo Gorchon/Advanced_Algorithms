@@ -12,53 +12,54 @@ using namespace std;
 // This function merges two parts of the array.
 // We're merging the section from `left` to `mid` with the section from `mid + 1` to `right`.
 // The goal here is to combine them in a way that keeps everything in descending order.
-void merge(vector<double> &arr, int left, int mid, int right)
+void merge(vector<double> &array, int leftIndex, int midIndex, int rightIndex)
 {
-    int n1 = mid - left + 1;
-    int n2 = right - mid;
+    int leftSize = midIndex - leftIndex + 1;
+    int rightSize = rightIndex - midIndex;
 
     // Temporary arrays to hold the split parts
-    vector<double> LeftArray(n1);
-    vector<double> RightArray(n2);
+    vector<double> leftArray(leftSize);
+    vector<double> rightArray(rightSize);
 
-    // Copy the data into the temp arrays
-    for (int i = 0; i < n1; i++)
-        LeftArray[i] = arr[left + i];
-    for (int j = 0; j < n2; j++)
-        RightArray[j] = arr[mid + 1 + j];
+    // Copy the data into the temporary arrays
+    for (int i = 0; i < leftSize; i++)
+        leftArray[i] = array[leftIndex + i];
+    for (int j = 0; j < rightSize; j++)
+        rightArray[j] = array[midIndex + 1 + j];
 
-    int i = 0, j = 0, k = left;
+    int leftArrayIndex = 0, rightArrayIndex = 0;
+    int mergedArrayIndex = leftIndex;
 
     // Merge the two arrays back into the main array in the correct order
-    while (i < n1 && j < n2)
+    while (leftArrayIndex < leftSize && rightArrayIndex < rightSize)
     {
-        if (LeftArray[i] >= RightArray[j])
+        if (leftArray[leftArrayIndex] >= rightArray[rightArrayIndex])
         {
-            arr[k] = LeftArray[i];
-            i++;
+            array[mergedArrayIndex] = leftArray[leftArrayIndex];
+            leftArrayIndex++;
         }
         else
         {
-            arr[k] = RightArray[j];
-            j++;
+            array[mergedArrayIndex] = rightArray[rightArrayIndex];
+            rightArrayIndex++;
         }
-        k++;
+        mergedArrayIndex++;
     }
 
     // If there are leftover elements in the left array, add them back in
-    while (i < n1)
+    while (leftArrayIndex < leftSize)
     {
-        arr[k] = LeftArray[i];
-        i++;
-        k++;
+        array[mergedArrayIndex] = leftArray[leftArrayIndex];
+        leftArrayIndex++;
+        mergedArrayIndex++;
     }
 
     // If there are leftover elements in the right array, add those too
-    while (j < n2)
+    while (rightArrayIndex < rightSize)
     {
-        arr[k] = RightArray[j];
-        j++;
-        k++;
+        array[mergedArrayIndex] = rightArray[rightArrayIndex];
+        rightArrayIndex++;
+        mergedArrayIndex++;
     }
 }
 
