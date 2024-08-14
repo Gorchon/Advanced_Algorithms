@@ -33,7 +33,9 @@ void merge(vector<double> &array, int leftIndex, int midIndex, int rightIndex)
     // Merge the two arrays back into the main array in the correct order
     while (leftArrayIndex < leftSize && rightArrayIndex < rightSize)
     {
-        if (leftArray[leftArrayIndex] >= rightArray[rightArrayIndex])
+        // to decide the order of the elements we use <= if we want to sort in ascending order and >= if we want to sort in descending order
+        if (leftArray[leftArrayIndex] <= rightArray[rightArrayIndex])
+
         {
             array[mergedArrayIndex] = leftArray[leftArrayIndex];
             leftArrayIndex++;
@@ -109,3 +111,20 @@ int main()
 
     return 0;
 }
+
+/*
+ * Time Complexity Explanation:
+ *
+ * - The MergeSort algorithm works by dividing the array into two halves,
+ *   sorting each half recursively, and then merging the sorted halves.
+ *
+ * - The "divide" step splits the array in half, which takes constant time O(1).
+ * - The "conquer" step involves recursively sorting two halves, which takes O(log n) levels of recursion.
+ * - The "merge" step, where we combine the two halves, takes linear time O(n) for each level of recursion.
+ *
+ * - Overall, the time complexity of MergeSort is O(n log n).
+ *   This is because we have O(log n) levels of recursion, and at each level, we spend O(n) time to merge.
+ *
+ * - MergeSort is more efficient than simpler algorithms like Bubble Sort (O(n^2)),
+ *   especially for large datasets, because of its logarithmic splitting.
+ */
