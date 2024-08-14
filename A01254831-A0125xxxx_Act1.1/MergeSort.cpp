@@ -28,10 +28,10 @@ void merge(vector<double> &array, int leftIndex, int midIndex, int rightIndex)
         rightArray[j] = array[midIndex + 1 + j];
 
     int leftArrayIndex = 0, rightArrayIndex = 0;
-    int mergedArrayIndex = leftIndex;
+    int mergedArrayIndex = leftIndex; // is assigned to leftIndex because we are going to merge the two arrays into the main array starting from the leftIndex
 
     // Merge the two arrays back into the main array in the correct order
-    while (leftArrayIndex < leftSize && rightArrayIndex < rightSize)
+    while (leftArrayIndex < leftSize && rightArrayIndex < rightSize) // check whether we have reached the end of the left or right array
     {
         // to decide the order of the elements we use <= if we want to sort in ascending order and >= if we want to sort in descending order
         if (leftArray[leftArrayIndex] <= rightArray[rightArrayIndex])
@@ -48,7 +48,8 @@ void merge(vector<double> &array, int leftIndex, int midIndex, int rightIndex)
         mergedArrayIndex++;
     }
 
-    // If there are leftover elements in the left array, add them back in
+    // If there are leftover elements in the left array, add them to the merged array
+    // This happens when the right array is fully processed
     while (leftArrayIndex < leftSize)
     {
         array[mergedArrayIndex] = leftArray[leftArrayIndex];
@@ -56,7 +57,8 @@ void merge(vector<double> &array, int leftIndex, int midIndex, int rightIndex)
         mergedArrayIndex++;
     }
 
-    // If there are leftover elements in the right array, add those too
+    // If there are leftover elements in the right array, add them to the merged array
+    // This happens when the left array is fully processed
     while (rightArrayIndex < rightSize)
     {
         array[mergedArrayIndex] = rightArray[rightArrayIndex];
