@@ -21,26 +21,44 @@ using namespace std;
 
 vector<int> GreedyApproach(int change, vector<int> &CurrencyUnits)
 {
+
+    // Time Complexity: O(n log n) for sorting, where n is the size of CurrencyUnits.
+    //                  O(n * (change / min(CurrencyUnits))) for the loop, in the worst case.
+    // Space Complexity: O(n) for the coinsUsed vector, where n is the size of CurrencyUnits.
+
+    // sort it to ensure this will always be a greedy approach
+    sort(CurrencyUnits.rbegin(), CurrencyUnits.rend());
+    // Initialize a vector to store the number of coins used for each kind of coin.
     vector<int> coinsUsed(CurrencyUnits.size(), 0);
+
+    // Iterate through each denomination in the CurrencyUnits vector.
+    // Greedy approach: Start from the largest denomination (assuming CurrencyUnits is sorted in descending order).
     for (int i = 0; i < CurrencyUnits.size(); i++)
     {
+        // While the current denomination can still be subtracted from the remaining change,
+        // keep subtracting it and increment the corresponding counter in coinsUsed.
+        // This step represents the greedy choice: always use the largest denomination possible.
         while (change >= CurrencyUnits[i])
         {
-            change -= CurrencyUnits[i];
-            coinsUsed[i]++;
+            change -= CurrencyUnits[i]; // Subtract the denomination from the remaining change.
+            coinsUsed[i]++;             // Increment the count for this denomination.
         }
     }
+
+    // Return the list of counts of coins/bills used for each denomination.
+    // This reflects the result of applying the greedy strategy.
     return coinsUsed;
 }
 
 void printCoins(vector<int> &coins, vector<int> &CurrencyUnits, int change)
 {
-    cout << "Total change to provide: " << change << " units\n";
+
+    cout << "Total change to provide:\033[1;31m " << change << " \033[0munits\n";
     for (int i = 0; i < coins.size(); ++i)
     {
         if (coins[i] > 0)
         {
-            cout << "CurrencyUnits: " << CurrencyUnits[i] << " - Number of coins: " << coins[i] << endl;
+            cout << "CurrencyUnits: \033[1;32m" << CurrencyUnits[i] << "\033[0m - Number of coins: \033[1;33m" << coins[i] << "\033[0m" << endl;
         }
     }
 }
@@ -62,13 +80,13 @@ int main()
 
     sort(CurrencyUnits.begin(), CurrencyUnits.end(), greater<int>());
 
-    cout << "Greedy result" << endl;
+    cout << "\033[1;35mThis is the Greedy result: \033[0m" << endl;
 
     // Use Greedy Algorithm
     vector<int> greedyResult = GreedyApproach(change, CurrencyUnits);
     printCoins(greedyResult, CurrencyUnits, change);
 
-    cout << "this is the dp result" << endl;
+    cout << "\033[1;35mThis is the DP result: \033[0m" << endl;
 
     return 0;
 }
