@@ -19,36 +19,40 @@
 
 using namespace std;
 
-void printCoins(vector<int> &coins)
+vector<int> GreedyApproach(int change, vector<int> &CurrencyUnits)
 {
-    for (int coin : coins)
+    vector<int> coinsUsed(CurrencyUnits.size(), 0);
+    for (int i = 0; i < CurrencyUnits.size(); i++)
     {
-        cout << coin << endl;
-    }
-}
-
-vector<int> changeUsingGreedy(int change, vector<int> &denominations)
-{
-    vector<int> coinsUsed(denominations.size(), 0);
-    for (int i = 0; i < denominations.size(); i++)
-    {
-        while (change >= denominations[i])
+        while (change >= CurrencyUnits[i])
         {
-            change -= denominations[i];
+            change -= CurrencyUnits[i];
             coinsUsed[i]++;
         }
     }
     return coinsUsed;
 }
 
+void printCoins(vector<int> &coins, vector<int> &CurrencyUnits, int change)
+{
+    cout << "Total change to provide: " << change << " units\n";
+    for (int i = 0; i < coins.size(); ++i)
+    {
+        if (coins[i] > 0)
+        {
+            cout << "CurrencyUnits: " << CurrencyUnits[i] << " - Number of coins: " << coins[i] << endl;
+        }
+    }
+}
+
 int main()
 {
     int N;
     cin >> N;
-    vector<int> denominations(N);
+    vector<int> CurrencyUnits(N);
     for (int i = 0; i < N; ++i)
     {
-        cin >> denominations[i];
+        cin >> CurrencyUnits[i];
     }
 
     int P, Q;
@@ -56,13 +60,13 @@ int main()
 
     int change = Q - P;
 
-    sort(denominations.begin(), denominations.end(), greater<int>());
+    sort(CurrencyUnits.begin(), CurrencyUnits.end(), greater<int>());
 
-    cout << "this is the greedy result" << endl;
+    cout << "Greedy result" << endl;
 
     // Use Greedy Algorithm
-    vector<int> greedyResult = changeUsingGreedy(change, denominations);
-    printCoins(greedyResult);
+    vector<int> greedyResult = GreedyApproach(change, CurrencyUnits);
+    printCoins(greedyResult, CurrencyUnits, change);
 
     cout << "this is the dp result" << endl;
 
