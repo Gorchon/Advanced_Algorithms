@@ -27,7 +27,7 @@ int KMP(const string &text, const string &pattern)
     int n = text.size();
     vector<int> lps(m, 0); // Longest Prefix Suffix array
 
-    // Build the LPS array
+    // Build the LPS array (longest-prefix-suffix) or also called pi table
     for (int i = 1, length = 0; i < m;)
     {
         if (pattern[i] == pattern[length])
@@ -148,7 +148,7 @@ pair<int, int> longestCommonSubstring(const string &s1, const string &s2)
 const string RED = "\033[31m";
 const string GREEN = "\033[32m";
 const string YELLOW = "\033[33m";
-const string MAGENTA = "\033[1;35m"; // Bold magenta
+const string MAGENTA = "\033[1;35m";
 const string RESET = "\033[0m";
 
 int main()
