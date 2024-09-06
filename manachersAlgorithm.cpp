@@ -20,7 +20,7 @@ public:
         }
 
         int n = t.size();
-        vector<int> P(n, 0);       // Array to store the radius of palindromes centered at each character
+        vector<int> P(n, 0);       // Here we store the fucking radius of al characters
         int center = 0, right = 0; // To track the center and right boundary of the current palindrome
         int maxLen = 0;            // To track the length of the longest palindrome
         int maxCenter = 0;         // To track the center of the longest palindrome
