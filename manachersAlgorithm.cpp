@@ -41,9 +41,14 @@ public:
             }
 
             // Step 4: Expand around center i
-            while (i + P[i] + 1 < n && i - P[i] - 1 >= 0 && t[i + P[i] + 1] == t[i - P[i] - 1])
+            int left = i - P[i] - 1;
+            int right = i + P[i] + 1;
+
+            while (right < n && left >= 0 && t[right] == t[left])
             {
                 P[i]++;
+                left--;
+                right++;
             }
 
             // Update the center and right boundary if the palindrome expands beyond the current boundary
