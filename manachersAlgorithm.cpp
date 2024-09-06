@@ -32,9 +32,12 @@ public:
             int mirror = 2 * center - i;
 
             // If i is within the right boundary, use the mirrored value
+            // example if i = 5, center = 3, mirror = 1, right = 7 as we can see i is within the right boundary so we can use the mirrored value
             if (i < right)
             {
                 P[i] = min(right - i, P[mirror]);
+                // This line sets the palindrome radius at i to the minimum of the distance between i and right and the palindrome radius at the mirrored position
+                // it has to be the minimum because we can't expand beyond the right boundary for sureeee
             }
 
             // Step 4: Expand around center i
