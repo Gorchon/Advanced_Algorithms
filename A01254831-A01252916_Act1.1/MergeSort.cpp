@@ -7,7 +7,7 @@ using namespace std;
 // g++ MergeSort.cpp -o MergeSort
 
 // then run it using the following command:
-// ./MergeSort < input.txt
+// ./MergeSort < in.txt
 
 // This function merges two parts of the array.
 // We're merging the section from `left` to `mid` with the section from `mid + 1` to `right`.
@@ -28,7 +28,7 @@ void merge(vector<double> &array, int leftIndex, int midIndex, int rightIndex)
         rightArray[j] = array[midIndex + 1 + j];
 
     int leftArrayIndex = 0, rightArrayIndex = 0;
-    int mergedArrayIndex = leftIndex; // is assigned to leftIndex because we are going to merge the two arrays into the main array starting from the leftIndex
+    int mergedArrayIndex = leftIndex; //  assigned to leftIndex because we are going to merge the two arrays into the main array starting from the leftIndex
 
     // Merge the two arrays back into the main array in the correct order
     while (leftArrayIndex < leftSize && rightArrayIndex < rightSize) // check whether we have reached the end of the left or right array
