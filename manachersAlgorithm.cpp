@@ -68,17 +68,22 @@ public:
 int main()
 {
     Solution solution;
-    string s;
 
-    // Take input from the user
-    cout << "Enter a string: ";
-    cin >> s;
+    // Predefined test strings
+    vector<string> testStrings = {
+        "babad",  // Expected output: "bab" or "aba"
+        "cbbd",   // Expected output: "bb"
+        "a",      // Expected output: "a"
+        "ac",     // Expected output: "a" or "c"
+        "racecar" // Expected output: "racecar"
+    };
 
-    // Call the longestPalindrome function
-    string result = solution.longestPalindrome(s);
-
-    // Output the result
-    cout << "The longest palindromic substring is: " << result << endl;
+    // Test each string
+    for (const string &s : testStrings)
+    {
+        string result = solution.longestPalindrome(s);
+        cout << "The longest palindromic substring in \"" << s << "\" is: " << result << endl;
+    }
 
     return 0;
 }
