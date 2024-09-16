@@ -89,25 +89,30 @@ int main(int argumentCount, char *argumentValues[])
         return 1;
     }
 
-    // Declare a set to store unique hashes
-    unordered_set<unsigned long long> hashSet;
+    // Declare a map to store hashes and their respective line number
+    unordered_map<unsigned long long, int> hashMap;
 
     // Read each string from the file
     string currentString;
-    while (inputFile >> currentString)
+    int lineNumber = 0; // Keeps track of line number
+
+    while (getline(inputFile, currentString)) // Use getline to read the whole line
     {
+        lineNumber++; // Increment line number as we read each line
+
         // Compute the hash of the current string
         unsigned long long hashValue = computeStringHash(currentString);
 
-        // Check if the hash already exists in the set (duplicate string detected)
-        if (hashSet.find(hashValue) != hashSet.end())
+        // Check if the hash already exists in the map (duplicate string detected)
+        if (hashMap.find(hashValue) != hashMap.end())
         {
-            cout << "Strings are not distinct\n";
+            cout << "Strings are not distinct. Duplicate found at line " << lineNumber
+                 << ". First occurrence was at line " << hashMap[hashValue] << ".\n";
             return 0;
         }
 
-        // Insert the hash into the set
-        hashSet.insert(hashValue);
+        // Insert the hash and line number into the map
+        hashMap[hashValue] = lineNumber;
     }
 
     // If we reach here, all strings are distinct
