@@ -1,0 +1,13 @@
+ThisIsALongStringWith1234567890NumbersAndSpecialChars!@#$%^&*()_+
+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+SameStringButDifferentCasing
+samestringbutdifferentcasing
+AStringWithALotOfRepeatingCharactersAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AnotherVeryLongStringToTestTheLimitsOfTheHashFunctionAndSeeIfItCanHandleLargeInputsCorrectlyWithoutIssues
+Short
+12345678901234567890123456789012345678901234567890123456789012345678901234567890
+SpecialCharacters{}[]<>,.?/~`+=-
+VeryVeryLongStringWithSpecialCharactersAndNumbers1234567890!@#$%^&*()_+<>?:"{}|
+EdgeCaseString123
+RepeatedString
+RepeatedString
