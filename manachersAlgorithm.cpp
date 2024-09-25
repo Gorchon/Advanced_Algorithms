@@ -52,7 +52,7 @@ public:
             }
 
             // Update the center and right boundary if the palindrome expands beyond the current boundary
-            if (i + P[i] > right)
+            if (i + P[i] > right) // an example would be if i = 5, P[i] = 2, right = 7, so we have to update the center and right boundary cause 5 + 2 > 7
             {
                 center = i;
                 right = i + P[i];
