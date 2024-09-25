@@ -39,6 +39,24 @@
  * Author: José María Soto Valenzuela and Cesas Alan Silva Ramos
  */
 
+/*
+* Explanations of each test case
+
+*Test Case 1:  Basic Connectivity with No Edges
+*Explanation:
+*This test case represents a graph with 4 nodes but no edges between them
+* (other than self-loops). The Dijkstra’s algorithm should show that no paths
+* exist between nodes except from a node to itself (0 distance), and the Floyd-Warshall
+* output should be a matrix of 0 for diagonals and -1 everywhere else. */
+
+/*
+*Test Case 2: All Pairs Connected with Same Weights
+
+*Explanation:
+*This test case represents a fully connected graph of 3 nodes where all edge weights are equal
+* (1). The Dijkstra’s algorithm should return a distance of 1 between any two different nodes,
+ *and Floyd-Warshall should show the same distances between all pairs.
+ */
 #include <iostream>
 #include <vector>
 #include <climits>
