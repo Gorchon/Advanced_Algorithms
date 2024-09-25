@@ -1,0 +1,18 @@
+Dijkstra :
+node 1 to node 2 : 3
+node 1 to node 3 : 1
+node 1 to node 4 : -2147483646
+node 2 to node 1 : 5
+node 2 to node 3 : 2
+node 2 to node 4 : 3
+node 3 to node 1 : -2147483640
+node 3 to node 2 : -2147483648
+node 3 to node 4 : 1
+node 4 to node 1 : 2
+node 4 to node 2 : 0
+node 4 to node 3 : -2147483647
+Floyd :
+0 3 5 6 
+5 0 2 3 
+3 6 0 1 
+2 5 7 0 

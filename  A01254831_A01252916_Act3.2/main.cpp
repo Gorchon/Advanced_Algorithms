@@ -26,7 +26,7 @@
  * Steps to compile and run this program on a Linux system:
  *
  * 1. Compile the program:
- *    g++ -o shortest_path main.cpp
+ *    g++ -std=c++11 -o shortest_path main.cpp
  *
  * 2. Run the program with input redirection:
  *    ./shortest_path < in.txt
@@ -136,10 +136,13 @@ void floydWarshall(vector<vector<int>> &graph, int n)
         {
             for (int j = 0; j < n; j++)
             {
-                // If a shorter path is found via node k, update the distance matrix
-                if (dist[i][k] != -1 && dist[k][j] != -1 && (dist[i][j] == -1 || dist[i][j] > dist[i][k] + dist[k][j]))
+                // Only update if both dist[i][k] and dist[k][j] are not infinite (INT_MAX)
+                if (dist[i][k] != INT_MAX && dist[k][j] != INT_MAX)
                 {
-                    dist[i][j] = dist[i][k] + dist[k][j];
+                    if (dist[i][j] == INT_MAX || dist[i][j] > dist[i][k] + dist[k][j])
+                    {
+                        dist[i][j] = dist[i][k] + dist[k][j];
+                    }
                 }
             }
         }
