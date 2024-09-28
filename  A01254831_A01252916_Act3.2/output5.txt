@@ -1,0 +1,15 @@
+Dijkstra :
+node 1 to node 2 : -2
+node 1 to node 3 : 4
+node 1 to node 4 : 0
+node 2 to node 1 : there is no path
+node 2 to node 3 : 3
+node 2 to node 4 : 2
+node 3 to node 1 : there is no path
+node 3 to node 2 : -6
+node 3 to node 4 : -4
+node 4 to node 1 : there is no path
+node 4 to node 2 : 1
+node 4 to node 3 : 4
+
+Negative cycle detected.

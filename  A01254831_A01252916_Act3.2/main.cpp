@@ -26,17 +26,21 @@
  * Steps to compile and run this program on a Linux system:
  *
  * 1. Compile the program:
- *    g++ -std=c++11 -o shortest_path main.cpp
+   g++ -std=c++11 -o shortest_path main.cpp
  *
  * 2. Run the program with input redirection:
- *    ./shortest_path < in.txt
+./shortest_path < input1.txt > output1.txt
+./shortest_path < input2.txt > output2.txt
+ ./shortest_path < input3.txt > output3.txt
+./shortest_path < input4.txt > output4.txt
+./shortest_path < input5.txt > output5.txt
  *
  * 3. Format of input in `in.txt`:
  *    - First line: an integer n (number of nodes)
  *    - Next n x n values: adjacency matrix representing the directed graph.
  *      - -1 represents no direct edge between nodes i and j, except for diagonal elements which are 0.
  *
- * Author: José María Soto Valenzuela and Cesas Alan Silva Ramos
+ * Authors: José María Soto Valenzuela and Cesas Alan Silva Ramos
  */
 
 /*
@@ -57,6 +61,31 @@
 * (1). The Dijkstra’s algorithm should return a distance of 1 between any two different nodes,
  *and Floyd-Warshall should show the same distances between all pairs.
  */
+
+/*
+* Test Case 3: Mixed Graph with Different Weights and No Direct Connections
+
+* This graph has a mix of different weights, some disconnected nodes, and various
+ *+possible paths between pairs of nodes. Dijkstra's algorithm will show different distances between the
+ * nodes, while the Floyd-Warshall matrix will reveal the shortest paths, even filling in where direct connections
+  * are missing. */
+
+/*
+* Test Case 4: Large Dense Graph
+
+* This is a larger, dense graph with 5 nodes and various weights. Both Dijkstra’s and Floyd-Warshall algorithms should compute
+*  multiple paths and ensure they all match the shortest paths. Like this teacher you can see that the algorithm handles larger
+ * graphs correctly and efficiently. */
+
+/* *
+*  Test Case 5: negative cycles on a graph
+* This test case is useful because it challenges the program with a graph that contains negative edge weights and a negative cycle, allowing us to:
+
+* Verify that Dijkstra's algorithm is not applied when inappropriate.
+* Confirm that the Floyd-Warshall algorithm correctly detects negative cycles.
+* Ensure that the program handles complex scenarios gracefully.
+* Validate the correctness and robustness of the implemented algorithms. */
+
 #include <iostream>
 #include <vector>
 #include <climits>
@@ -68,7 +97,7 @@ using namespace std;
  * This function looks for the node with the smallest distance value from
  * the set of nodes that have not yet been visited.
  */
-int minDistance(vector<int> &dist, vector<bool> &visited, int n)
+int minDistance(vector<int> &dist, vector<bool> &visited, int n) // *  This is kinda of our min heap to be adding each value to our "minheap" and then be able to extract the min value
 {
     int min = INT_MAX, min_index;
 
@@ -88,33 +117,48 @@ int minDistance(vector<int> &dist, vector<bool> &visited, int n)
  * The graph is represented by an adjacency matrix where graph[i][j] is the weight
  * of the edge from node i to node j. If no edge exists, the value is -1.
  */
+
+// Dijkstra's Algorithm:
 void dijkstra(const vector<vector<int>> &graph, int src, int n)
 {
-    vector<int> dist(n, INT_MAX);   // Distance from source to each node
-    vector<bool> visited(n, false); // True if node is processed
+    vector<int> dist(n, INT_MAX);   // The distance from source to each node
+    vector<bool> visited(n, false); // Mark nodes as visited
 
     dist[src] = 0; // The distance from the source to itself is 0
 
     // Loop to find the shortest path to all nodes
-    for (int count = 0; count < n - 1; count++)
-    {
+    for (int count = 0; count < n; count++)
+    { // Run the loop n times
         // Find the node with the smallest distance that hasn't been visited
         int u = minDistance(dist, visited, n);
+
+        // If no more reachable nodes, break early
+        if (dist[u] == INT_MAX)
+            break;
+
         visited[u] = true; // Mark the node as visited
 
         // Update the distance of the adjacent nodes of the selected node
         for (int v = 0; v < n; v++)
         {
-            if (!visited[v] && graph[u][v] != -1 && dist[u] != INT_MAX && dist[u] + graph[u][v] < dist[v])
-                dist[v] = dist[u] + graph[u][v];
+            // Only update if the node is not visited and there is a direct edge
+            if (!visited[v] && graph[u][v] != INT_MAX && dist[u] + graph[u][v] < dist[v])
+            {
+                dist[v] = dist[u] + graph[u][v]; // Relax the edge
+            }
         }
     }
 
     // Print the results: shortest path from src to each node
     for (int i = 0; i < n; i++)
     {
-        if (i != src && dist[i] != INT_MAX)
-            cout << "node " << src + 1 << " to node " << i + 1 << " : " << dist[i] << endl;
+        if (i != src)
+        {
+            if (dist[i] == INT_MAX)
+                cout << "node " << src + 1 << " to node " << i + 1 << " : there is no path" << endl;
+            else
+                cout << "node " << src + 1 << " to node " << i + 1 << " : " << dist[i] << endl;
+        }
     }
 }
 
@@ -125,44 +169,69 @@ void dijkstra(const vector<vector<int>> &graph, int src, int n)
  * It uses a dynamic programming approach to update the shortest path between each pair (i, j)
  * by checking whether a shorter path can be found via an intermediate node k.
  */
-void floydWarshall(vector<vector<int>> &graph, int n)
+// Floyd-Warshall Algorithm
+// Floyd-Warshall algorithm implementation
+void floydWarshall(const vector<vector<int>> &graph)
 {
-    vector<vector<int>> dist = graph; // Initialize distance matrix with the input graph
+    int n = graph.size();
+    vector<vector<int>> dist = graph;
+    int INF = INT_MAX / 2; // Use INT_MAX / 2 to prevent overflows
 
-    // The core of the algorithm: iterating over each possible intermediate node k
+    // Initialize distance matrix
+    for (int i = 0; i < n; i++)
+    {
+        dist[i][i] = 0; // Distance to self is zero
+        for (int j = 0; j < n; j++)
+        {
+            if (dist[i][j] == -1)
+                dist[i][j] = INF;
+        }
+    }
+
     for (int k = 0; k < n; k++)
     {
         for (int i = 0; i < n; i++)
         {
+            if (dist[i][k] >= INF / 2)
+                continue;
             for (int j = 0; j < n; j++)
             {
-                // Only update if both dist[i][k] and dist[k][j] are not infinite (INT_MAX)
-                if (dist[i][k] != INT_MAX && dist[k][j] != INT_MAX)
+                if (dist[k][j] >= INF / 2)
+                    continue;
+                if (dist[i][j] > dist[i][k] + dist[k][j] && dist[i][k] + dist[k][j] < INF)
                 {
-                    if (dist[i][j] == INT_MAX || dist[i][j] > dist[i][k] + dist[k][j])
-                    {
-                        dist[i][j] = dist[i][k] + dist[k][j];
-                    }
+                    dist[i][j] = dist[i][k] + dist[k][j];
                 }
             }
         }
     }
 
-    // Print the shortest distance matrix
-    cout << "Floyd :" << endl;
+    // Check for negative cycles
+    for (int i = 0; i < n; i++)
+    {
+        if (dist[i][i] < 0)
+        {
+            cout << endl
+                 << "Negative cycle detected." << endl;
+            return;
+        }
+    }
+
+    // Output the result
+    cout << endl
+         << "Floyd :" << endl;
     for (int i = 0; i < n; i++)
     {
         for (int j = 0; j < n; j++)
         {
-            if (dist[i][j] == INT_MAX)
-                cout << "-1 "; // No path between i and j
+            if (dist[i][j] >= INF / 2)
+                cout << "-1 ";
             else
                 cout << dist[i][j] << " ";
         }
         cout << endl;
     }
 }
-
 int main()
 {
     int n; // Number of nodes in the graph
@@ -192,7 +261,7 @@ int main()
     }
 
     // Run Floyd-Warshall algorithm to compute shortest paths between all pairs of nodes
-    floydWarshall(graph, n);
+    floydWarshall(graph);
 
     return 0;
 }

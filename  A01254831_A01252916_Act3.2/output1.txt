@@ -1,4 +1,17 @@
 Dijkstra :
+node 1 to node 2 : there is no path
+node 1 to node 3 : there is no path
+node 1 to node 4 : there is no path
+node 2 to node 1 : there is no path
+node 2 to node 3 : there is no path
+node 2 to node 4 : there is no path
+node 3 to node 1 : there is no path
+node 3 to node 2 : there is no path
+node 3 to node 4 : there is no path
+node 4 to node 1 : there is no path
+node 4 to node 2 : there is no path
+node 4 to node 3 : there is no path
+
 Floyd :
 0 -1 -1 -1 
 -1 0 -1 -1 
