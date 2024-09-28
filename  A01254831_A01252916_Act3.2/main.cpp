@@ -188,18 +188,24 @@ void floydWarshall(const vector<vector<int>> &graph)
         }
     }
 
-    for (int k = 0; k < n; k++)
+    // The main part of the Floyd-Warshall algorithm
+    // We check if going through an intermediate node k gives a shorter path from i to j
+    for (int k = 0; k < n; k++) // For each possible intermediate node k
     {
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++) // For each starting node i
         {
-            if (dist[i][k] >= INF / 2)
+            if (dist[i][k] >= INF) // If there's no path from i to k, skip
                 continue;
-            for (int j = 0; j < n; j++)
+
+            for (int j = 0; j < n; j++) // For each ending node j
             {
-                if (dist[k][j] >= INF / 2)
+                if (dist[k][j] >= INF) // If there's no path from k to j, skip
                     continue;
-                if (dist[i][j] > dist[i][k] + dist[k][j] && dist[i][k] + dist[k][j] < INF)
+
+                // If the path from i to j via k is shorter than the current known path
+                if (dist[i][j] > dist[i][k] + dist[k][j])
                 {
+                    // Update the distance to the shorter path
                     dist[i][j] = dist[i][k] + dist[k][j];
                 }
             }
@@ -207,13 +213,14 @@ void floydWarshall(const vector<vector<int>> &graph)
     }
 
     // Check for negative cycles
+    // If the distance from a node to itself becomes negative, there's a negative cycle
     for (int i = 0; i < n; i++)
     {
         if (dist[i][i] < 0)
         {
             cout << endl
                  << "Negative cycle detected." << endl;
-            return;
+            return; // Stop the function if a negative cycle is found
         }
     }
 
