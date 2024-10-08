@@ -2,7 +2,15 @@
 def initialize_memo(n, C):
     return [[None for _ in range(C + 1)] for _ in range(n + 1)]
 
-def knapSack(n, C, w, v, arr):
+def knapSack(n, C, w, v, arr): 
+    
+    ## notation is 
+    ## n = number of items
+    ## C = capacity of the knapsack
+    ## w = weights of the items
+    ## v = values of the items
+    ## arr = memoization table
+    
     # Check if the solution has already been computed
     if arr[n][C] is not None:
         return arr[n][C]
@@ -18,7 +26,7 @@ def knapSack(n, C, w, v, arr):
         # 1. Exclude the current item
         tmp1 = knapSack(n-1, C, w, v, arr)
         # 2. Include the current item
-        tmp2 = v[n-1] + knapSack(n-1, C-w[n-1], w, v, arr)
+        tmp2 = v[n-1] + knapSack(n-1, C-w[n-1], w, v, arr) # here we check the option where we include the value
         result = max(tmp1, tmp2)
     
     # Store the computed result in the memoization table
