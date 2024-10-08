@@ -11,5 +11,5 @@ def knapSack(n, c, w, v):
     else:
         # Compare: skipping the item vs taking the item
         tmp1 = knapSack(n-1, c, w, v)
-        tmp2 = v[n-1] + knapSack(n-1, c-w[n-1], w, v)
+        tmp2 = v[n-1] + knapSack(n-1, c-w[n-1], w, v) # we store our values in this array  
         return max(tmp1, tmp2)
