@@ -22,7 +22,18 @@ Why are the 4 test cases useful?
 - Test 3 is an edge case with only one item, testing how the program performs with minimal input.
 - Test 4 is a larger input case that tests the efficiency and scalability of the program with more items and a higher weight capacity.
 */
-
+/*
+ * Steps to compile and run this program on a Linux system:
+ *
+ * 1. Compile the program:
+g++ -std=c++11 -o knapsack main.cpp
+ *
+ * 2. Run the program with input redirection:
+./knapsack < input1.txt
+./knapsack < input2.txt
+./knapsack < input3.txt
+./knapsack < input4.txt
+*/
 // Function to solve the knapsack problem
 int knapsack(int W, const vector<int> &values, const vector<int> &weights, int N)
 {
