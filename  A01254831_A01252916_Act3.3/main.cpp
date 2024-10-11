@@ -28,11 +28,14 @@ Why are the 4 test cases useful?
  * 1. Compile the program:
 g++ -std=c++11 -o knapsack main.cpp
  *
- * 2. Run the program with input redirection:
+ * 2. You can get the results in raw format by running the following commands:
 ./knapsack < input1.txt
 ./knapsack < input2.txt
 ./knapsack < input3.txt
 ./knapsack < input4.txt
+
+    * You can get the outputs cleaned and formatted by running the following command (recommended):
+for i in input1.txt input2.txt input3.txt input4.txt; do echo "Result for input $i:"; ./knapsack < $i; echo "-------------------------"; done
 */
 // Function to solve the knapsack problem
 int knapsack(int W, const vector<int> &values, const vector<int> &weights, int N)
