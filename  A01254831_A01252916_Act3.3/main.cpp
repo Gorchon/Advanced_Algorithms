@@ -4,6 +4,25 @@
 
 using namespace std;
 
+/*
+This program solves the 0/1 Knapsack problem. The problem is about selecting items, each with a value and weight,
+to maximize the total value in the knapsack without exceeding its weight capacity.
+We use dynamic programming (DP) to solve this problem.
+
+Time complexity:
+The time complexity of this solution is O(N * W), where N is the number of items and W is the capacity of the knapsack.
+This is because we have two nested loops: the outer one iterates over each item, and the inner one iterates over each possible weight from 0 to W.
+
+Space complexity:
+The space complexity is also O(N * W) since we use a 2D DP array of size (N + 1) x (W + 1) to store intermediate results.
+
+Why are the 4 test cases useful?
+- Test 1 is a basic small input case that checks if the program works with typical inputs.
+- Test 2 ensures the program handles situations where the knapsack's capacity is smaller than many item weights, forcing it to make difficult choices.
+- Test 3 is an edge case with only one item, testing how the program performs with minimal input.
+- Test 4 is a larger input case that tests the efficiency and scalability of the program with more items and a higher weight capacity.
+*/
+
 // Function to solve the knapsack problem
 int knapsack(int W, const vector<int> &values, const vector<int> &weights, int N)
 {
