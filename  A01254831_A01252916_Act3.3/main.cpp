@@ -37,10 +37,16 @@ g++ -std=c++11 -o knapsack main.cpp
     * You can get the outputs cleaned and formatted by running the following command (recommended):
 for i in input1.txt input2.txt input3.txt input4.txt; do echo "Result for input $i:"; ./knapsack < $i; echo "-------------------------"; done
 */
-// Function to solve the knapsack problem
+// Knapsack function to solve the 0/1 Knapsack problem
+// Terminology:
+// W: Maximum weight capacity of the knapsack
+// values: Vector of values of the items
+// weights: Vector of weights of the items
+// N: Number of items
+// Returns the maximum value(or mononey hehehe) that can be obtained...(PSSST!... this function may be integrated to VR glasses to make robbers life easier, do not share with them teacher)
 int knapsack(int W, const vector<int> &values, const vector<int> &weights, int N)
 {
-    vector<vector<int>> dp(N + 1, vector<int>(W + 1, 0));
+    vector<vector<int>> dp(N + 1, vector<int>(W + 1, 0)); // Initialize a 2D DP array with zeros to dynamically store the results
 
     for (int i = 1; i <= N; i++)
     {
