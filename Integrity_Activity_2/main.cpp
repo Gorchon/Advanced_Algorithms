@@ -5,6 +5,16 @@
 #include <cmath>
 #include <climits>
 
+/*
+ * Steps to compile and run this program on a Linux system:
+ *
+ * 1. Compile the program:
+g++ -std=c++11 -o integrated2 main.cpp
+ *
+ * 2. You can get the results in raw format by running the following commands:
+./integrated2 < input_realistic.txt
+ */
+
 using namespace std;
 
 // Structure to represent an edge in the graph
