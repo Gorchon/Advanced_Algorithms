@@ -154,57 +154,70 @@ void tsp(int startNode, vector<vector<int>> &graph, vector<bool> &visited, vecto
 }
 
 // Part 3: Ford-Fulkerson Algorithm for Maximum Flow using DFS
+
+// DFS function to find an augmenting path in the residual graph from 'source' to 'sink'
 bool dfs(vector<vector<int>> &residualGraph, int current, int sink, vector<int> &parent)
 {
+    // If we've reached the sink node, a path has been found
     if (current == sink)
         return true; // Reached sink node
 
+    // Explore each possible next node in the graph
     for (int next = 0; next < residualGraph.size(); ++next)
     {
-        // If there is available capacity and next node is unvisited
+        // Check if there's residual capacity (i.e., available capacity) and that 'next' is unvisited
         if (residualGraph[current][next] > 0 && parent[next] == -1)
         {
-            parent[next] = current; // Set parent for path reconstruction
+            parent[next] = current; // Set 'current' as the parent of 'next' to reconstruct the path
+
+            // Recursively attempt to find a path to the sink node from 'next'
             if (dfs(residualGraph, next, sink, parent))
-                return true; // Path to sink found
+                return true; // Path to sink has been found
         }
     }
-    return false; // No path found from current node
+
+    // If no path to the sink node was found from the 'current' node
+    return false;
 }
 
+// Main function to calculate the maximum flow from 'source' to 'sink' in the graph
 int maxFlow(vector<vector<int>> &graph, int source, int sink)
 {
     int totalFlow = 0;                         // Initialize total flow to zero
-    vector<vector<int>> residualGraph = graph; // Create residual graph
-    vector<int> parent(graph.size());          // To store augmenting path
+    vector<vector<int>> residualGraph = graph; // Copy original graph to create the residual graph
+    vector<int> parent(graph.size());          // Array to store the augmenting path (for each node, store its parent)
 
+    // Loop until no more augmenting paths are found
     while (true)
     {
-        fill(parent.begin(), parent.end(), -1); // Reset parent array
-        parent[source] = -2;                    // Mark source node as visited
+        fill(parent.begin(), parent.end(), -1); // Reset the parent array for a fresh search
+        parent[source] = -2;                    // Mark the source node as visited
 
-        // Use DFS to find an augmenting path
+        // Use DFS to find an augmenting path from source to sink
         if (!dfs(residualGraph, source, sink, parent))
-            break; // No more augmenting paths, algorithm terminates
+            break; // No more augmenting paths exist, so we terminate the loop
 
-        // Find the bottleneck (minimum residual capacity) along the path found
+        // Find the bottleneck capacity (minimum residual capacity) along the augmenting path found
         int flow = INT_MAX;
         for (int v = sink; v != source; v = parent[v])
         {
-            int u = parent[v];
-            flow = min(flow, residualGraph[u][v]);
+            int u = parent[v];                     // Get the previous node in the path
+            flow = min(flow, residualGraph[u][v]); // Update flow to the minimum residual capacity along the path
         }
 
-        // Update residual capacities along the path
+        // Update residual capacities in the graph based on the bottleneck capacity
         for (int v = sink; v != source; v = parent[v])
         {
             int u = parent[v];
-            residualGraph[u][v] -= flow; // Subtract flow from forward edge
-            residualGraph[v][u] += flow; // Add flow to reverse edge
+            residualGraph[u][v] -= flow; // Subtract bottleneck flow from the forward edge
+            residualGraph[v][u] += flow; // Add bottleneck flow to the reverse edge (allowing for possible backflow)
         }
 
-        totalFlow += flow; // Add flow to total flow
+        // Add the bottleneck flow of the current path to the total maximum flow
+        totalFlow += flow;
     }
+
+    // Return the computed maximum flow from source to sink
     return totalFlow;
 }
 
