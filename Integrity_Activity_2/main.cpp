@@ -111,46 +111,91 @@ vector<Edge> kruskalMST(int numNodes, vector<vector<int>> &graph)
     return mst;
 }
 
-// Global variables for TSP
-int minTSPCost = INT_MAX; // Minimum total cost found so far
-vector<int> optimalRoute; // Stores the best route found
-
-// Part 2: Traveling Salesman Problem using brute-force (for small N)
-void tsp(int startNode, vector<vector<int>> &graph, vector<bool> &visited, vector<int> &currentPath, int currentCost, int numNodes)
+// Part 2: Traveling Salesman Problem using Held-Karp Algorithm (Dynamic Programming)
+int tspHeldKarp(int numNodes, vector<vector<int>> &graph, vector<int> &optimalPath)
 {
-    // Base case: if all nodes have been visited
-    if (currentPath.size() == numNodes)
+    const int INF = INT_MAX;
+    int N = numNodes;
+    int VISITED_ALL = (1 << N) - 1; // All nodes have been visited when the bitmask is all ones
+
+    // dp[mask][i]: minimum cost to reach node i with visited nodes represented by mask
+    vector<vector<int>> dp(1 << N, vector<int>(N, INF));
+
+    // Base case: starting at node 0, cost is 0
+    dp[1 << 0][0] = 0;
+
+    // Iterate over all subsets of nodes (represented by masks)
+    for (int mask = 0; mask < (1 << N); mask++)
     {
-        // Add cost to return to the starting node
-        currentCost += graph[currentPath.back()][startNode];
-        // Update minimum cost and best route if current cost is lower
-        if (currentCost < minTSPCost)
+        for (int u = 0; u < N; u++)
         {
-            minTSPCost = currentCost;
-            optimalRoute = currentPath;
+            // If u is included in the current subset represented by mask
+            if (mask & (1 << u))
+            {
+                // Try to find the minimum cost to reach each node v from u
+                for (int v = 0; v < N; v++)
+                {
+                    // Skip if v is already in the mask or u and v are the same
+                    if ((mask & (1 << v)) || u == v)
+                        continue;
+
+                    // Update dp[mask | (1 << v)][v] if a better cost is found
+                    if (dp[mask][u] != INF && dp[mask][u] + graph[u][v] < dp[mask | (1 << v)][v])
+                    {
+                        dp[mask | (1 << v)][v] = dp[mask][u] + graph[u][v];
+                    }
+                }
+            }
         }
-        return;
     }
 
-    // Try all possible next nodes
-    for (int i = 0; i < numNodes; i++)
+    // Reconstruct the optimal path
+    int mask = VISITED_ALL;
+    int last = 0;
+    int min_cost = INF;
+
+    // Find the ending node that gives minimum cost
+    for (int i = 1; i < N; i++)
     {
-        if (!visited[i])
+        if (dp[mask][i] != INF && dp[mask][i] + graph[i][0] < min_cost)
         {
-            // Choose the next node
-            visited[i] = true;
-            currentPath.push_back(i);
-            currentCost += graph[currentPath[currentPath.size() - 2]][i];
-
-            // Recursive call to explore further
-            tsp(startNode, graph, visited, currentPath, currentCost, numNodes);
-
-            // Backtrack to previous state
-            currentCost -= graph[currentPath[currentPath.size() - 2]][i];
-            currentPath.pop_back();
-            visited[i] = false;
+            min_cost = dp[mask][i] + graph[i][0];
+            last = i;
         }
     }
+
+    // Backtracking to find the optimal path
+    optimalPath.push_back(0); // Start from node 0
+    int current_mask = mask;
+    int current_node = last;
+
+    vector<int> path;
+    path.push_back(last);
+
+    while (current_mask != (1 << 0))
+    {
+        int prev_mask = current_mask ^ (1 << current_node);
+        for (int i = 0; i < N; i++)
+        {
+            if ((prev_mask & (1 << i)) && dp[prev_mask][i] != INF && dp[prev_mask][i] + graph[i][current_node] == dp[current_mask][current_node])
+            {
+                path.push_back(i);
+                current_node = i;
+                current_mask = prev_mask;
+                break;
+            }
+        }
+    }
+
+    // Reverse the path and add to optimalPath
+    for (int i = path.size() - 1; i >= 0; i--)
+    {
+        optimalPath.push_back(path[i]);
+    }
+
+    optimalPath.push_back(0); // Return to starting node
+
+    return min_cost;
 }
 
 // Part 3: Ford-Fulkerson Algorithm for Maximum Flow using DFS
@@ -276,22 +321,18 @@ int main()
         cout << "(" << indexToChar(edge.from) << "," << indexToChar(edge.to) << ")" << endl;
     }
 
-    // Part 2: Mail delivery route (Traveling Salesman Problem)
-    minTSPCost = INT_MAX;
-    optimalRoute.clear();
-    vector<bool> visited(numNodes, false);
-    vector<int> currentPath;
-    int startNode = 0; // Start from node 0 ('A')
-    visited[startNode] = true;
-    currentPath.push_back(startNode);
-    tsp(startNode, distanceMatrix, visited, currentPath, 0, numNodes);
+    // Part 2: Mail delivery route (Traveling Salesman Problem using Held-Karp Algorithm)
+    vector<int> optimalRoute;
+    int minTSPCost = tspHeldKarp(numNodes, distanceMatrix, optimalRoute);
 
     cout << "2. Route to be followed by the mail delivery personnel:" << endl;
-    for (int i = 0; i < optimalRoute.size(); i++)
+    for (size_t i = 0; i < optimalRoute.size(); i++)
     {
-        cout << indexToChar(optimalRoute[i]) << " -> ";
+        cout << indexToChar(optimalRoute[i]);
+        if (i != optimalRoute.size() - 1)
+            cout << " -> ";
     }
-    cout << indexToChar(startNode) << endl; // Return to starting node
+    cout << endl;
 
     // Part 3: Maximum information flow value from the initial node to the final node
     int sourceNode = 0;          // Initial node ('A')
