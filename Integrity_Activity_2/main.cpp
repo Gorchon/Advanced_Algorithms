@@ -3,18 +3,43 @@
 #include <climits>
 #include <algorithm>
 #include <cmath>
+#include <map>
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+#include <CGAL/Delaunay_triangulation_2.h>
 
 /*
  * Steps to compile and run this program on a Linux system:
  *
- * 1. Compile the program:
- *    g++ -std=c++11 -o integrated2 main.cpp
+ * 1. Navigate to the project directory (where CMakeLists.txt is located):
+ *    cd project_directory
  *
- * 2. Run the program with an input file:
- *    ./integrated2 < input.txt
+ * 2. Create and enter the build directory:
+ *    mkdir build
+ *    cd build
+ *
+ * 3. Run CMake to configure the project:
+ *    cmake ..
+ *
+ * 4. Compile the project:
+ *    make
+ *
+ * 5. Run the program with an input file:
+ *    ./NeighborhoodFiberOptics < ../input.txt
  */
 
+
+
+
 using namespace std;
+
+// Part of CGAL
+typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
+typedef CGAL::Delaunay_triangulation_2<K> Delaunay;
+typedef K::Point_2 Point;
+typedef K::Vector_2 Vector;
+typedef Delaunay::Face_handle Face_handle;
+typedef Delaunay::Vertex_handle Vertex_handle;
+
 
 // Structure to represent an edge in the graph
 struct Edge
@@ -340,12 +365,48 @@ int main()
     int max_flow = maxFlow(capacityMatrix, sourceNode, sinkNode);
     cout << "3. Maximum information flow value from the initial node to the final node: " << max_flow << endl;
 
-    // Part 4: List of polygons (coordinates of exchanges)
-    // Output the coordinates of the exchanges
-    cout << "4. List of polygons (coordinates of exchanges):" << endl;
-    for (int i = 0; i < numNodes; i++)
-    {
-        cout << "(" << coordinates[i].first << "," << coordinates[i].second << ")" << endl;
+    // Part 4
+      // Part 4: Compute and Output Voronoi Polygons for Each Exchange
+    Delaunay delaunay;
+    vector<Point> points;
+    for (const auto& coord : coordinates)
+        points.emplace_back(coord.first, coord.second);
+    delaunay.insert(points.begin(), points.end());
+
+    map<Point, vector<pair<double, double>>> voronoi_polygons;
+    for (auto vertex = delaunay.finite_vertices_begin(); vertex != delaunay.finite_vertices_end(); ++vertex) {
+        vector<pair<double, double>> polygon;
+        Delaunay::Face_circulator circulator = delaunay.incident_faces(vertex), done = circulator;
+        do {
+            Face_handle face = circulator;
+            if (!delaunay.is_infinite(face)) {
+                Point voronoi_vertex = delaunay.dual(face);
+                polygon.emplace_back(voronoi_vertex.x(), voronoi_vertex.y());
+            } else {
+                int i = face->index(vertex);
+                Face_handle neighbor = face->neighbor(i);
+                if (!delaunay.is_infinite(neighbor)) {
+                    Point p1 = delaunay.dual(neighbor);
+                    Vertex_handle v_target = face->vertex((i + 1) % 3);
+                    Vertex_handle v_source = face->vertex((i + 2) % 3);
+                    Vector vec = v_target->point() - v_source->point();
+                    Vector dir = Vector(-vec.y(), vec.x()); // Perpendicular to the edge
+dir = dir / std::sqrt(dir.squared_length()); // Normalize the direction vector
+                    Point extended_point = delaunay.dual(face) + dir * 1000;  // Extend by arbitrary distance
+                    polygon.emplace_back(extended_point.x(), extended_point.y());
+                }
+            }
+            ++circulator;
+        } while (circulator != done);
+        voronoi_polygons[vertex->point()] = polygon;
+    }
+
+    cout << "4. Voronoi cells for exchanges:" << endl;
+    for (const auto& [exchange, polygon] : voronoi_polygons) {
+        cout << "Exchange at (" << exchange.x() << ", " << exchange.y() << "): ";
+        for (const auto& vertex : polygon)
+            cout << "(" << vertex.first << ", " << vertex.second << ") ";
+        cout << endl;
     }
 
     return 0;
