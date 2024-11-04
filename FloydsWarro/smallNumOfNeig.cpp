@@ -72,3 +72,57 @@ public:
         return resultCity;
     }
 };
+
+int main()
+{
+    Solution solution;
+
+    // Test Case 1
+    int n1 = 4;
+    vector<vector<int>> edges1 = {
+        {0, 1, 3},
+        {1, 2, 1},
+        {2, 3, 4},
+        {0, 3, 7}};
+    int distanceThreshold1 = 4;
+    cout << "Test Case 1: Expected output = 3, Actual output = "
+         << solution.findTheCity(n1, edges1, distanceThreshold1) << endl;
+
+    // Test Case 2
+    int n2 = 5;
+    vector<vector<int>> edges2 = {
+        {0, 1, 2},
+        {1, 2, 3},
+        {2, 3, 1},
+        {3, 4, 5},
+        {0, 4, 8}};
+    int distanceThreshold2 = 6;
+    cout << "Test Case 2: Expected output = 0, Actual output = "
+         << solution.findTheCity(n2, edges2, distanceThreshold2) << endl;
+
+    // Test Case 3
+    int n3 = 6;
+    vector<vector<int>> edges3 = {
+        {0, 1, 10},
+        {0, 2, 5},
+        {1, 2, 6},
+        {1, 3, 15},
+        {2, 4, 9},
+        {4, 5, 3}};
+    int distanceThreshold3 = 10;
+    cout << "Test Case 3: Expected output = 5, Actual output = "
+         << solution.findTheCity(n3, edges3, distanceThreshold3) << endl;
+
+    // Test Case 4
+    int n4 = 4;
+    vector<vector<int>> edges4 = {
+        {0, 1, 1},
+        {1, 2, 1},
+        {2, 3, 1},
+        {0, 3, 4}};
+    int distanceThreshold4 = 2;
+    cout << "Test Case 4: Expected output = 0, Actual output = "
+         << solution.findTheCity(n4, edges4, distanceThreshold4) << endl;
+
+    return 0;
+}
